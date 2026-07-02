@@ -1,0 +1,268 @@
+import type { Customer, Appointment, ServiceRecord } from "@/types";
+
+export const customers: Customer[] = [
+  {
+    id: "c1",
+    name: "Ahmet Yılmaz",
+    phone: "0532 111 22 33",
+    vehicles: [
+      { id: "v1", plate: "34 AB 1234", brand: "Honda", model: "Civic", year: 2020 },
+    ],
+  },
+  {
+    id: "c2",
+    name: "Ayşe Demir",
+    phone: "0533 222 33 44",
+    vehicles: [
+      { id: "v2", plate: "34 CD 5678", brand: "Honda", model: "CR-V", year: 2022 },
+    ],
+  },
+  {
+    id: "c3",
+    name: "Mehmet Kaya",
+    phone: "0535 333 44 55",
+    vehicles: [
+      { id: "v3", plate: "34 EF 9012", brand: "Honda", model: "Jazz", year: 2019 },
+    ],
+  },
+  {
+    id: "c4",
+    name: "Zeynep Çelik",
+    phone: "0536 444 55 66",
+    vehicles: [
+      { id: "v4", plate: "34 GH 3456", brand: "Honda", model: "Accord", year: 2021 },
+      { id: "v5", plate: "34 GH 7890", brand: "Honda", model: "HR-V", year: 2023 },
+    ],
+  },
+  {
+    id: "c5",
+    name: "Ali Öztürk",
+    phone: "0537 555 66 77",
+    vehicles: [
+      { id: "v6", plate: "34 IJ 7890", brand: "Honda", model: "HR-V", year: 2023 },
+    ],
+  },
+  {
+    id: "c6",
+    name: "Fatma Şahin",
+    phone: "0538 666 77 88",
+    vehicles: [
+      { id: "v7", plate: "34 KL 1234", brand: "Honda", model: "City", year: 2024 },
+    ],
+  },
+  {
+    id: "c7",
+    name: "Mustafa Aydın",
+    phone: "0539 777 88 99",
+    vehicles: [
+      { id: "v8", plate: "34 MN 5678", brand: "Honda", model: "Civic", year: 2018 },
+    ],
+  },
+];
+
+const today = new Date().toISOString().split("T")[0];
+
+export const appointments: Appointment[] = [
+  {
+    id: "a1",
+    customerId: "c1",
+    vehicleId: "v1",
+    operation: "Periyodik Bakım",
+    date: today,
+    time: "09:00",
+    status: "geldi",
+    notes: "45.000 km bakımı",
+  },
+  {
+    id: "a2",
+    customerId: "c2",
+    vehicleId: "v2",
+    operation: "Yağ Değişimi",
+    date: today,
+    time: "09:30",
+    status: "tamamlandi",
+  },
+  {
+    id: "a3",
+    customerId: "c3",
+    vehicleId: "v3",
+    operation: "Fren Balatası Değişimi",
+    date: today,
+    time: "10:00",
+    status: "bekliyor",
+    notes: "Ön fren balataları",
+  },
+  {
+    id: "a4",
+    customerId: "c4",
+    vehicleId: "v4",
+    operation: "Klima Bakımı",
+    date: today,
+    time: "10:30",
+    status: "geldi",
+  },
+  {
+    id: "a5",
+    customerId: "c5",
+    vehicleId: "v6",
+    operation: "Periyodik Bakım",
+    date: today,
+    time: "11:00",
+    status: "bekliyor",
+    notes: "30.000 km bakımı",
+  },
+  {
+    id: "a6",
+    customerId: "c6",
+    vehicleId: "v7",
+    operation: "Ön Düzen / Rot Balans",
+    date: today,
+    time: "13:00",
+    status: "bekliyor",
+  },
+  {
+    id: "a7",
+    customerId: "c7",
+    vehicleId: "v8",
+    operation: "Triger Kayışı Değişimi",
+    date: today,
+    time: "13:30",
+    status: "iptal",
+    notes: "Müşteri erteledi",
+  },
+  {
+    id: "a8",
+    customerId: "c1",
+    vehicleId: "v1",
+    operation: "Genel Kontrol",
+    date: today,
+    time: "14:00",
+    status: "bekliyor",
+  },
+  {
+    id: "a9",
+    customerId: "c4",
+    vehicleId: "v5",
+    operation: "Akü Değişimi",
+    date: today,
+    time: "14:30",
+    status: "bekliyor",
+  },
+  {
+    id: "a10",
+    customerId: "c2",
+    vehicleId: "v2",
+    operation: "Fren Balatası Değişimi",
+    date: today,
+    time: "15:00",
+    status: "bekliyor",
+    notes: "Arka fren balataları",
+  },
+];
+
+export const serviceRecords: ServiceRecord[] = [
+  {
+    id: "s1",
+    customerId: "c1",
+    vehicleId: "v1",
+    date: "2024-06-15",
+    operation: "Periyodik Bakım",
+    mileage: 30000,
+    notes: "30.000 km bakımı yapıldı",
+  },
+  {
+    id: "s2",
+    customerId: "c1",
+    vehicleId: "v1",
+    date: "2024-01-10",
+    operation: "Yağ Değişimi",
+    mileage: 25000,
+  },
+  {
+    id: "s3",
+    customerId: "c2",
+    vehicleId: "v2",
+    date: "2024-05-20",
+    operation: "Periyodik Bakım",
+    mileage: 20000,
+  },
+  {
+    id: "s4",
+    customerId: "c2",
+    vehicleId: "v2",
+    date: "2024-02-15",
+    operation: "Fren Balatası Değişimi",
+    mileage: 18000,
+  },
+  {
+    id: "s5",
+    customerId: "c3",
+    vehicleId: "v3",
+    date: "2024-04-10",
+    operation: "Yağ Değişimi",
+    mileage: 40000,
+  },
+  {
+    id: "s6",
+    customerId: "c3",
+    vehicleId: "v3",
+    date: "2023-11-05",
+    operation: "Klima Bakımı",
+    mileage: 35000,
+  },
+  {
+    id: "s7",
+    customerId: "c4",
+    vehicleId: "v4",
+    date: "2024-03-22",
+    operation: "Periyodik Bakım",
+    mileage: 60000,
+    notes: "60.000 km ağır bakım",
+  },
+  {
+    id: "s8",
+    customerId: "c4",
+    vehicleId: "v4",
+    date: "2023-09-10",
+    operation: "Triger Kayışı Değişimi",
+    mileage: 55000,
+  },
+  {
+    id: "s9",
+    customerId: "c4",
+    vehicleId: "v4",
+    date: "2023-05-01",
+    operation: "Fren Balatası Değişimi",
+    mileage: 48000,
+  },
+  {
+    id: "s10",
+    customerId: "c5",
+    vehicleId: "v6",
+    date: "2024-06-01",
+    operation: "Yağ Değişimi",
+    mileage: 15000,
+  },
+];
+
+export const operations = [
+  "Periyodik Bakım",
+  "Yağ Değişimi",
+  "Fren Balatası Değişimi",
+  "Triger Kayışı Değişimi",
+  "Klima Bakımı",
+  "Ön Düzen / Rot Balans",
+  "Akü Değişimi",
+  "Genel Kontrol",
+  "Egzoz Kontrolü",
+  "Şanzıman Bakımı",
+  "Buji Değişimi",
+  "Süspansiyon Kontrolü",
+];
+
+export const timeSlots = [
+  "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
+  "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
+  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
+  "17:00", "17:30",
+];
