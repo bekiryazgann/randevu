@@ -7,7 +7,17 @@ import { Clock, Users, CheckCircle2, AlertCircle, Wrench } from "lucide-react";
 export default function Dashboard() {
   const { todayAppointments, getTodaySummary } = useApp();
   const summary = getTodaySummary();
+
+  const now = new Date();
+  const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+
+  const isPast = (time: string) => time < currentTime;
+
   const sorted = [...todayAppointments].sort((a, b) => {
+    const aPast = isPast(a.time) && a.status === "bekliyor";
+    const bPast = isPast(b.time) && b.status === "bekliyor";
+    if (aPast && !bPast) return 1;
+    if (!aPast && bPast) return -1;
     if (a.status === "tamamlandi" && b.status !== "tamamlandi") return 1;
     if (b.status === "tamamlandi" && a.status !== "tamamlandi") return -1;
     if (a.status === "iptal" && b.status !== "iptal") return 1;
@@ -74,7 +84,7 @@ export default function Dashboard() {
             description="Yeni randevu eklemek için alttaki + butonuna dokunun."
           />
         ) : (
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {sorted.map((appointment, idx) => {
               const isCompleted = appointment.status === "tamamlandi";
               const isCancelled = appointment.status === "iptal";
@@ -87,13 +97,15 @@ export default function Dashboard() {
                 idx === 0 ||
                 appointment.time.substring(0, 2) !== sorted[idx - 1].time.substring(0, 2);
 
+              const isPastAppt = isPast(appointment.time) && appointment.status === "bekliyor";
+
               return (
                 <div key={appointment.id}>
                   {showTimeHeader && (
-                    <div className="flex items-center gap-2 py-2">
+                    <div className="flex items-center gap-2 py-1.5">
                       <div
                         className={cn(
-                          "flex size-7 items-center justify-center rounded-full text-[10px] font-bold",
+                          "flex size-6 items-center justify-center rounded-full text-[10px] font-bold",
                           isCompleted
                             ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
                             : isCancelled
@@ -106,8 +118,8 @@ export default function Dashboard() {
                       <div className="h-px flex-1 bg-border" />
                     </div>
                   )}
-                  <div className="ml-[18px] border-l-2 border-border pl-4 pb-1">
-                    <AppointmentCard appointment={appointment} />
+                  <div className="ml-[14px] border-l-2 border-border pl-3 pb-0.5">
+                    <AppointmentCard appointment={appointment} compact={isPastAppt} />
                     {isLastOfHour && <div className="h-2" />}
                     {idx === sorted.length - 1 && <div className="h-2" />}
                   </div>

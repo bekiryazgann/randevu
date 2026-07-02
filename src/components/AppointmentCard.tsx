@@ -3,14 +3,15 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { cn } from "@/lib/utils";
 import type { Appointment } from "@/types";
 import { useApp } from "@/store/AppContext";
-import { Car, Clock, User, Wrench } from "lucide-react";
+import { Clock, User } from "lucide-react";
 
 interface AppointmentCardProps {
   appointment: Appointment;
   showCustomer?: boolean;
+  compact?: boolean;
 }
 
-export function AppointmentCard({ appointment, showCustomer = true }: AppointmentCardProps) {
+export function AppointmentCard({ appointment, showCustomer = true, compact = false }: AppointmentCardProps) {
   const { getCustomerById, getVehicleById, dispatch } = useApp();
   const customer = getCustomerById(appointment.customerId);
   const vehicle = getVehicleById(appointment.vehicleId);
@@ -21,6 +22,26 @@ export function AppointmentCard({ appointment, showCustomer = true }: Appointmen
     dispatch({ type: "SELECT_APPOINTMENT", appointmentId: appointment.id });
   };
 
+  if (compact) {
+    return (
+      <Card
+        className="cursor-pointer transition-colors hover:bg-accent/50 active:scale-[0.98] opacity-40"
+        onClick={handleClick}
+      >
+        <CardContent className="flex items-center justify-between p-2.5">
+          <div className="min-w-0 flex-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+            <Clock className="size-3 shrink-0" />
+            <span className="tabular-nums">{appointment.time}</span>
+            <span className="truncate">
+              {customer.name} · {vehicle.plate}
+            </span>
+          </div>
+          <StatusBadge status={appointment.status} />
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card
       className={cn(
@@ -29,38 +50,31 @@ export function AppointmentCard({ appointment, showCustomer = true }: Appointmen
       )}
       onClick={handleClick}
     >
-      <CardContent className="flex flex-col gap-2 p-4">
+      <CardContent className="flex flex-col gap-1 p-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
-              <Clock className="size-4 text-primary" />
-            </div>
+          <div className="flex items-center gap-1.5 min-w-0">
+            <Clock className="size-3.5 shrink-0 text-muted-foreground" />
             <span className="text-sm font-semibold tabular-nums">{appointment.time}</span>
           </div>
           <StatusBadge status={appointment.status} />
         </div>
 
         {showCustomer && (
-          <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-            <User className="size-3.5 shrink-0" />
-            <span className="truncate">{customer.name}</span>
-          </div>
+          <p className="text-xs text-muted-foreground truncate flex items-center gap-1 ml-0">
+            <User className="size-3 shrink-0" />
+            {customer.name}
+          </p>
         )}
 
-        <div className="flex items-center gap-1.5 text-sm">
-          <Wrench className="size-3.5 shrink-0 text-muted-foreground" />
-          <span className="font-medium truncate">{appointment.operation}</span>
-        </div>
-
-        <div className="flex items-center gap-1.5 text-sm text-muted-foreground">
-          <Car className="size-3.5 shrink-0" />
-          <span className="truncate">
-            {vehicle.plate} - {vehicle.model} {vehicle.year}
+        <p className="text-xs truncate">
+          <span className="font-medium">{appointment.operation}</span>
+          <span className="text-muted-foreground">
+            {" · "}{vehicle.plate} {vehicle.model}
           </span>
-        </div>
+        </p>
 
         {appointment.notes && (
-          <p className="text-xs text-muted-foreground/70 border-t pt-1.5 mt-0.5 truncate">
+          <p className="text-[11px] text-muted-foreground/60 truncate">
             {appointment.notes}
           </p>
         )}

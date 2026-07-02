@@ -55,7 +55,7 @@ export default function AllAppointments() {
           description="Bu kategoride henüz randevu yok."
         />
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-1.5">
           {filtered.map((appt) => (
             <AppointmentCard key={appt.id} appointment={appt} />
           ))}
