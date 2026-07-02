@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "motion/react";
 import { useApp, customers } from "@/store/AppContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,9 +18,10 @@ import { Check, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 export default function NewAppointment() {
-  const { dispatch, state } = useApp();
-  const [step, setStep] = useState<"form" | "customer">(state.selectedCustomerId ? "form" : "customer");
-  const [customerId, setCustomerId] = useState(state.selectedCustomerId || "");
+  const { dispatch } = useApp();
+  const navigate = useNavigate();
+  const [step, setStep] = useState<"form" | "customer">("customer");
+  const [customerId, setCustomerId] = useState("");
   const [vehicleId, setVehicleId] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState("");
@@ -62,7 +65,7 @@ export default function NewAppointment() {
     setTime("");
     setNotes("");
     setStep("customer");
-    dispatch({ type: "SET_PAGE", page: "dashboard" });
+    navigate("/");
   };
 
   if (step === "customer") {
@@ -78,12 +81,15 @@ export default function NewAppointment() {
             <CardTitle className="text-sm font-medium">Müşteri Seçimi</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2 p-3">
-            <button
+            <motion.button
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => {
                 setCustomerId("new");
                 setStep("form");
               }}
-              className="flex items-center gap-3 rounded-lg border-2 border-dashed border-primary/30 p-3 text-left transition-colors hover:bg-primary/5 active:scale-[0.98]"
+              className="flex items-center gap-3 rounded-lg border-2 border-dashed border-primary/30 p-3 text-left transition-colors hover:bg-primary/5"
             >
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
                 <UserPlus className="size-5 text-primary" />
@@ -92,7 +98,7 @@ export default function NewAppointment() {
                 <p className="text-sm font-medium text-primary">Yeni Müşteri Ekle</p>
                 <p className="text-xs text-muted-foreground">Hızlı kayıt oluştur</p>
               </div>
-            </button>
+            </motion.button>
 
             <div className="relative my-2">
               <div className="absolute inset-0 flex items-center">
@@ -103,15 +109,18 @@ export default function NewAppointment() {
               </div>
             </div>
 
-            {customers.map((c) => (
-              <button
+            {customers.map((c, i) => (
+              <motion.button
                 key={c.id}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.2 }}
                 onClick={() => {
                   setCustomerId(c.id);
                   setVehicleId(c.vehicles[0]?.id || "");
                   setStep("form");
                 }}
-                className="flex items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent active:scale-[0.98]"
+                className="flex items-center gap-3 rounded-lg border p-3 text-left transition-colors hover:bg-accent"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-bold text-primary">
                   {c.name.charAt(0)}
@@ -122,7 +131,7 @@ export default function NewAppointment() {
                     {c.phone} · {c.vehicles.map((v) => v.plate).join(", ")}
                   </p>
                 </div>
-              </button>
+              </motion.button>
             ))}
 
           </CardContent>

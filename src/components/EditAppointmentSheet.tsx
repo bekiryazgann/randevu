@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useApp } from "@/store/AppContext";
+import { motion } from "motion/react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
@@ -141,18 +142,19 @@ export function EditAppointmentSheet() {
               </Label>
               <div className="grid grid-cols-2 gap-2">
                 {statusOptions.map((opt) => (
-                  <button
+                  <motion.button
                     key={opt.value}
+                    whileTap={{ scale: 0.95 }}
                     onClick={() => setStatus(opt.value)}
                     className={cn(
-                      "flex items-center justify-center gap-2 rounded-lg border-2 p-3 text-sm font-medium transition-all active:scale-95",
+                      "flex items-center justify-center gap-2 rounded-lg border-2 p-3 text-sm font-medium transition-colors",
                       status === opt.value
                         ? opt.color + " border-current"
                         : "border-border text-muted-foreground hover:border-muted-foreground/30"
                     )}
                   >
                     {opt.label}
-                  </button>
+                  </motion.button>
                 ))}
               </div>
             </div>

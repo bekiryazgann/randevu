@@ -2,6 +2,7 @@ import { useApp } from "@/store/AppContext";
 import { AppointmentCard } from "@/components/AppointmentCard";
 import { EmptyState } from "@/components/EmptyState";
 import { cn } from "@/lib/utils";
+import { motion } from "motion/react";
 import { Clock, Users, CheckCircle2, AlertCircle, Wrench } from "lucide-react";
 
 export default function Dashboard() {
@@ -44,30 +45,21 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-        <SummaryCard
-          label="Toplam"
-          value={summary.total}
-          icon={Users}
-          className="bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-        />
-        <SummaryCard
-          label="Bekleyen"
-          value={summary.bekliyor}
-          icon={Clock}
-          className="bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300"
-        />
-        <SummaryCard
-          label="Geldi"
-          value={summary.geldi}
-          icon={AlertCircle}
-          className="bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
-        />
-        <SummaryCard
-          label="Tamamlanan"
-          value={summary.tamamlandi}
-          icon={CheckCircle2}
-          className="bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300"
-        />
+        {[
+          { label: "Toplam" as const, value: summary.total, icon: Users, className: "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300" },
+          { label: "Bekleyen" as const, value: summary.bekliyor, icon: Clock, className: "bg-amber-50 text-amber-700 dark:bg-amber-950 dark:text-amber-300" },
+          { label: "Geldi" as const, value: summary.geldi, icon: AlertCircle, className: "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300" },
+          { label: "Tamamlanan" as const, value: summary.tamamlandi, icon: CheckCircle2, className: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900 dark:text-zinc-300" },
+        ].map((card, i) => (
+          <motion.div
+            key={card.label}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: i * 0.06, duration: 0.25 }}
+          >
+            <SummaryCard {...card} />
+          </motion.div>
+        ))}
       </div>
 
       <div>
@@ -100,7 +92,12 @@ export default function Dashboard() {
               const isPastAppt = isPast(appointment.time) && appointment.status === "bekliyor";
 
               return (
-                <div key={appointment.id}>
+                <motion.div
+                  key={appointment.id}
+                  initial={{ opacity: 0, x: -8 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: idx * 0.03, duration: 0.2 }}
+                >
                   {showTimeHeader && (
                     <div className="flex items-center gap-2 py-1.5">
                       <div
@@ -123,7 +120,7 @@ export default function Dashboard() {
                     {isLastOfHour && <div className="h-2" />}
                     {idx === sorted.length - 1 && <div className="h-2" />}
                   </div>
-                </div>
+                </motion.div>
               );
             })}
           </div>

@@ -5,13 +5,11 @@ import { appointments as initialAppointments, serviceRecords as initialServiceRe
 interface AppState {
   appointments: Appointment[];
   serviceRecords: ServiceRecord[];
-  activePage: "dashboard" | "appointments" | "new";
   selectedCustomerId: string | null;
   selectedAppointmentId: string | null;
 }
 
 type AppAction =
-  | { type: "SET_PAGE"; page: AppState["activePage"] }
   | { type: "SELECT_CUSTOMER"; customerId: string | null }
   | { type: "SELECT_APPOINTMENT"; appointmentId: string | null }
   | { type: "ADD_APPOINTMENT"; appointment: Appointment }
@@ -27,16 +25,12 @@ function getTodayAppointments(appts: Appointment[]) {
 const initialState: AppState = {
   appointments: initialAppointments,
   serviceRecords: initialServiceRecords,
-  activePage: "dashboard",
   selectedCustomerId: null,
   selectedAppointmentId: null,
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case "SET_PAGE":
-      return { ...state, activePage: action.page, selectedCustomerId: null };
-
     case "SELECT_CUSTOMER":
       return { ...state, selectedCustomerId: action.customerId };
 

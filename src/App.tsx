@@ -1,4 +1,6 @@
-import { AppProvider, useApp } from "@/store/AppContext";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "motion/react";
+import { AppProvider } from "@/store/AppContext";
 import { Layout } from "@/components/Layout";
 import { EditAppointmentSheet } from "@/components/EditAppointmentSheet";
 import { CustomerDetailSheet } from "@/components/CustomerDetailSheet";
@@ -7,19 +9,59 @@ import Dashboard from "@/pages/Dashboard";
 import AllAppointments from "@/pages/AllAppointments";
 import NewAppointment from "@/pages/NewAppointment";
 
-function AppRoutes() {
-  const { state } = useApp();
+const pageVariants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
+};
 
-  switch (state.activePage) {
-    case "dashboard":
-      return <Dashboard />;
-    case "appointments":
-      return <AllAppointments />;
-    case "new":
-      return <NewAppointment />;
-    default:
-      return <Dashboard />;
-  }
+function PageWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <motion.div
+      variants={pageVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+function AppRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route
+          path="/"
+          element={
+            <PageWrapper>
+              <Dashboard />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/randevular"
+          element={
+            <PageWrapper>
+              <AllAppointments />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/yeni"
+          element={
+            <PageWrapper>
+              <NewAppointment />
+            </PageWrapper>
+          }
+        />
+      </Routes>
+    </AnimatePresence>
+  );
 }
 
 export default function App() {
