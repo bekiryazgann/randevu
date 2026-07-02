@@ -7,14 +7,11 @@ import { StatusBadge } from "@/components/StatusBadge";
 import { customers, serviceRecords } from "@/data/mock";
 import { Phone, Car, Calendar, Wrench, Gauge, X } from "lucide-react";
 
-interface CustomerDetailSheetProps {
-  customerId: string;
-  onClose: () => void;
-}
+export function CustomerDetailSheet() {
+  const { state, dispatch } = useApp();
+  const customerId = state.selectedCustomerId;
+  const customer = customerId ? customers.find((c) => c.id === customerId) : undefined;
 
-export function CustomerDetailSheet({ customerId, onClose }: CustomerDetailSheetProps) {
-  const { state } = useApp();
-  const customer = customers.find((c) => c.id === customerId);
   if (!customer) return null;
 
   const customerRecords = serviceRecords.filter((r) => r.customerId === customerId);
@@ -22,14 +19,16 @@ export function CustomerDetailSheet({ customerId, onClose }: CustomerDetailSheet
     (a) => a.customerId === customerId
   );
 
+  const handleClose = () => dispatch({ type: "SELECT_CUSTOMER", customerId: null });
+
   return (
-    <Sheet open={!!customerId} onOpenChange={(open) => { if (!open) onClose(); }}>
+    <Sheet open={!!customerId} onOpenChange={(open) => { if (!open) handleClose(); }}>
       <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0">
         <ScrollArea className="h-full">
           <SheetHeader className="px-4 pt-4 pb-2 text-left sticky top-0 bg-background z-10">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-lg">Müşteri Kartı</SheetTitle>
-              <Button variant="ghost" size="icon" onClick={onClose} className="size-8">
+              <Button variant="ghost" size="icon" onClick={handleClose} className="size-8">
                 <X className="size-4" />
               </Button>
             </div>

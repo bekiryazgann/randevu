@@ -7,12 +7,15 @@ interface AppState {
   serviceRecords: ServiceRecord[];
   activePage: "dashboard" | "appointments" | "new";
   selectedCustomerId: string | null;
+  selectedAppointmentId: string | null;
 }
 
 type AppAction =
   | { type: "SET_PAGE"; page: AppState["activePage"] }
   | { type: "SELECT_CUSTOMER"; customerId: string | null }
+  | { type: "SELECT_APPOINTMENT"; appointmentId: string | null }
   | { type: "ADD_APPOINTMENT"; appointment: Appointment }
+  | { type: "UPDATE_APPOINTMENT"; appointment: Appointment }
   | { type: "UPDATE_APPOINTMENT_STATUS"; id: string; status: AppointmentStatus }
   | { type: "DELETE_APPOINTMENT"; id: string };
 
@@ -26,6 +29,7 @@ const initialState: AppState = {
   serviceRecords: initialServiceRecords,
   activePage: "dashboard",
   selectedCustomerId: null,
+  selectedAppointmentId: null,
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
@@ -36,8 +40,19 @@ function appReducer(state: AppState, action: AppAction): AppState {
     case "SELECT_CUSTOMER":
       return { ...state, selectedCustomerId: action.customerId };
 
+    case "SELECT_APPOINTMENT":
+      return { ...state, selectedAppointmentId: action.appointmentId };
+
     case "ADD_APPOINTMENT":
       return { ...state, appointments: [...state.appointments, action.appointment] };
+
+    case "UPDATE_APPOINTMENT":
+      return {
+        ...state,
+        appointments: state.appointments.map((a) =>
+          a.id === action.appointment.id ? action.appointment : a
+        ),
+      };
 
     case "UPDATE_APPOINTMENT_STATUS":
       return {

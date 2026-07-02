@@ -18,8 +18,7 @@ export function AppointmentCard({ appointment, showCustomer = true }: Appointmen
   if (!customer || !vehicle) return null;
 
   const handleClick = () => {
-    dispatch({ type: "SELECT_CUSTOMER", customerId: customer.id });
-    dispatch({ type: "SET_PAGE", page: "appointments" });
+    dispatch({ type: "SELECT_APPOINTMENT", appointmentId: appointment.id });
   };
 
   return (

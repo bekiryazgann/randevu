@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useApp } from "@/store/AppContext";
 import { AppointmentCard } from "@/components/AppointmentCard";
 import { EmptyState } from "@/components/EmptyState";
-import { CustomerDetailSheet } from "@/components/CustomerDetailSheet";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { AppointmentStatus } from "@/types";
 
@@ -14,7 +13,7 @@ const tabs: { value: AppointmentStatus | "all"; label: string }[] = [
 ];
 
 export default function AllAppointments() {
-  const { state, dispatch } = useApp();
+  const { state } = useApp();
   const [filter, setFilter] = useState<AppointmentStatus | "all">("all");
 
   const filtered = useMemo(() => {
@@ -61,13 +60,6 @@ export default function AllAppointments() {
             <AppointmentCard key={appt.id} appointment={appt} />
           ))}
         </div>
-      )}
-
-      {state.selectedCustomerId && (
-        <CustomerDetailSheet
-          customerId={state.selectedCustomerId}
-          onClose={() => dispatch({ type: "SELECT_CUSTOMER", customerId: null })}
-        />
       )}
     </div>
   );

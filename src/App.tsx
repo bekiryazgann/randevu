@@ -1,5 +1,7 @@
 import { AppProvider, useApp } from "@/store/AppContext";
 import { Layout } from "@/components/Layout";
+import { EditAppointmentSheet } from "@/components/EditAppointmentSheet";
+import { CustomerDetailSheet } from "@/components/CustomerDetailSheet";
 import { Toaster } from "@/components/ui/sonner";
 import Dashboard from "@/pages/Dashboard";
 import AllAppointments from "@/pages/AllAppointments";
@@ -26,6 +28,8 @@ export default function App() {
       <Layout>
         <AppRoutes />
       </Layout>
+      <EditAppointmentSheet />
+      <CustomerDetailSheet />
       <Toaster richColors position="top-center" />
     </AppProvider>
   );

@@ -11,7 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { operations, timeSlots } from "@/data/mock";
+import { timeSlots } from "@/data/mock";
 import { Check, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
@@ -20,7 +20,6 @@ export default function NewAppointment() {
   const [step, setStep] = useState<"form" | "customer">(state.selectedCustomerId ? "form" : "customer");
   const [customerId, setCustomerId] = useState(state.selectedCustomerId || "");
   const [vehicleId, setVehicleId] = useState("");
-  const [operation, setOperation] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
@@ -34,7 +33,7 @@ export default function NewAppointment() {
   const selectedCustomer = customers.find((c) => c.id === customerId);
 
   const handleSubmit = () => {
-    if (!customerId || !vehicleId || !operation || !time) {
+    if (!customerId || !vehicleId || !time) {
       toast.error("Lütfen tüm zorunlu alanları doldurun.");
       return;
     }
@@ -46,7 +45,7 @@ export default function NewAppointment() {
         id,
         customerId,
         vehicleId,
-        operation,
+        operation: notes || "Randevu",
         date,
         time,
         status: "bekliyor",
@@ -55,12 +54,11 @@ export default function NewAppointment() {
     });
 
     toast.success("Randevu başarıyla oluşturuldu.", {
-      description: `${time} - ${operation}`,
+      description: `${time} - ${notes || "Randevu"}`,
     });
 
     setCustomerId("");
     setVehicleId("");
-    setOperation("");
     setTime("");
     setNotes("");
     setStep("customer");
@@ -77,9 +75,34 @@ export default function NewAppointment() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Kayıtlı Müşteriler</CardTitle>
+            <CardTitle className="text-sm font-medium">Müşteri Seçimi</CardTitle>
           </CardHeader>
           <CardContent className="flex flex-col gap-2 p-3">
+            <button
+              onClick={() => {
+                setCustomerId("new");
+                setStep("form");
+              }}
+              className="flex items-center gap-3 rounded-lg border-2 border-dashed border-primary/30 p-3 text-left transition-colors hover:bg-primary/5 active:scale-[0.98]"
+            >
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                <UserPlus className="size-5 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-primary">Yeni Müşteri Ekle</p>
+                <p className="text-xs text-muted-foreground">Hızlı kayıt oluştur</p>
+              </div>
+            </button>
+
+            <div className="relative my-2">
+              <div className="absolute inset-0 flex items-center">
+                <div className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-background px-2 text-muted-foreground">veya kayıtlı müşteri seçin</span>
+              </div>
+            </div>
+
             {customers.map((c) => (
               <button
                 key={c.id}
@@ -102,30 +125,6 @@ export default function NewAppointment() {
               </button>
             ))}
 
-            <div className="relative my-2">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">veya</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => {
-                setCustomerId("new");
-                setStep("form");
-              }}
-              className="flex items-center gap-3 rounded-lg border-2 border-dashed p-3 text-left transition-colors hover:bg-accent/50 active:scale-[0.98]"
-            >
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-muted">
-                <UserPlus className="size-5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-sm font-medium">Yeni Müşteri Ekle</p>
-                <p className="text-xs text-muted-foreground">Hızlı kayıt oluştur</p>
-              </div>
-            </button>
           </CardContent>
         </Card>
       </div>
@@ -213,7 +212,7 @@ export default function NewAppointment() {
             <div className="space-y-1.5">
               <Label className="text-xs">Araç *</Label>
               <Select value={vehicleId} onValueChange={setVehicleId}>
-                <SelectTrigger className="h-11">
+                <SelectTrigger className="h-11 w-full">
                   <SelectValue placeholder="Araç seçin" />
                 </SelectTrigger>
                 <SelectContent>
@@ -228,54 +227,37 @@ export default function NewAppointment() {
           )}
 
           <div className="space-y-1.5">
-            <Label className="text-xs">İşlem *</Label>
-            <Select value={operation} onValueChange={setOperation}>
-              <SelectTrigger className="h-11">
-                <SelectValue placeholder="İşlem seçin" />
+            <Label className="text-xs">Tarih *</Label>
+            <Input
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className="h-11 w-full"
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <Label className="text-xs">Saat *</Label>
+            <Select value={time} onValueChange={setTime}>
+              <SelectTrigger className="h-11 w-full">
+                <SelectValue placeholder="Saat seçin" />
               </SelectTrigger>
               <SelectContent>
-                {operations.map((op) => (
-                  <SelectItem key={op} value={op}>
-                    {op}
+                {timeSlots.map((t) => (
+                  <SelectItem key={t} value={t}>
+                    {t}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <Label className="text-xs">Tarih *</Label>
-              <Input
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="h-11"
-              />
-            </div>
-            <div className="space-y-1.5">
-              <Label className="text-xs">Saat *</Label>
-              <Select value={time} onValueChange={setTime}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder="Saat seçin" />
-                </SelectTrigger>
-                <SelectContent>
-                  {timeSlots.map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {t}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
           <div className="space-y-1.5">
-            <Label className="text-xs">Not</Label>
+            <Label className="text-xs">İşlem / Not</Label>
             <Input
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Eklemek istediğiniz bir not..."
+              placeholder="Yağ değişimi, periyodik bakım..."
               className="h-11"
             />
           </div>
