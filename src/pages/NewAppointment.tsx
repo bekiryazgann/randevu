@@ -5,6 +5,7 @@ import { useApp } from "@/store/AppContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/DatePicker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -24,7 +25,7 @@ export default function NewAppointment() {
   const [step, setStep] = useState<"form" | "customer">(preselectedId ? "form" : "customer");
   const [customerId, setCustomerId] = useState(preselectedId || "");
   const [vehicleId, setVehicleId] = useState("");
-  const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [date, setDate] = useState<Date>(new Date());
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
@@ -37,6 +38,7 @@ export default function NewAppointment() {
     }
 
     const id = `a${Date.now()}`;
+    const dateStr = date.toISOString().split("T")[0];
     dispatch({
       type: "ADD_APPOINTMENT",
       appointment: {
@@ -44,7 +46,7 @@ export default function NewAppointment() {
         customerId,
         vehicleId,
         operation: notes || "Randevu",
-        date,
+        date: dateStr,
         time,
         status: "bekliyor",
         notes: notes || undefined,
@@ -177,19 +179,14 @@ export default function NewAppointment() {
 
           <div className="space-y-2">
             <Label className="text-sm">Tarih *</Label>
-            <Input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="h-12 w-full text-base"
-            />
+            <DatePicker date={date} onSelect={(d) => d && setDate(d)} />
           </div>
 
           <div className="space-y-2">
             <Label className="text-sm">Saat *</Label>
             <Select value={time} onValueChange={setTime}>
               <SelectTrigger className="h-12 w-full text-base">
-                <SelectValue placeholder="Saat seçin" />
+                <SelectValue placeholder="Seçin" />
               </SelectTrigger>
               <SelectContent>
                 {timeSlots.map((t) => (

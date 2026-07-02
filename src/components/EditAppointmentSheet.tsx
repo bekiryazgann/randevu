@@ -6,6 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { DatePicker } from "@/components/DatePicker";
 import {
   Select,
   SelectContent,
@@ -41,14 +42,14 @@ export function EditAppointmentSheet() {
   const appointment = state.appointments.find((a) => a.id === state.selectedAppointmentId);
 
   const [status, setStatus] = useState<AppointmentStatus>("bekliyor");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState<Date>();
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
     if (appointment) {
       setStatus(appointment.status);
-      setDate(appointment.date);
+      setDate(new Date(appointment.date));
       setTime(appointment.time);
       setNotes(appointment.notes || "");
     }
@@ -60,12 +61,13 @@ export function EditAppointmentSheet() {
   const vehicle = getVehicleById(appointment.vehicleId);
 
   const handleSave = () => {
+    const dateStr = date ? date.toISOString().split("T")[0] : appointment.date;
     dispatch({
       type: "UPDATE_APPOINTMENT",
       appointment: {
         ...appointment,
         status,
-        date,
+        date: dateStr,
         time,
         operation: notes || appointment.operation,
         notes: notes || undefined,
@@ -162,17 +164,11 @@ export function EditAppointmentSheet() {
             <Separator />
 
             <div className="space-y-2">
-              <Label className="text-sm" htmlFor="edit-date">
+              <Label className="text-sm">
                 <Calendar className="size-3 inline mr-1" />
                 Tarih
               </Label>
-              <Input
-                id="edit-date"
-                type="date"
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                className="h-12 w-full text-base"
-              />
+              <DatePicker date={date} onSelect={setDate} />
             </div>
 
             <div className="space-y-2">
@@ -182,7 +178,7 @@ export function EditAppointmentSheet() {
               </Label>
               <Select value={time} onValueChange={setTime}>
                 <SelectTrigger className="h-12 w-full text-base">
-                  <SelectValue placeholder="Saat seçin" />
+                  <SelectValue placeholder="Seçin" />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map((t) => (
