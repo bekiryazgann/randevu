@@ -14,17 +14,7 @@ export default function Dashboard() {
 
   const isPast = (time: string) => time < currentTime;
 
-  const sorted = [...todayAppointments].sort((a, b) => {
-    const aPast = isPast(a.time) && a.status === "bekliyor";
-    const bPast = isPast(b.time) && b.status === "bekliyor";
-    if (aPast && !bPast) return 1;
-    if (!aPast && bPast) return -1;
-    if (a.status === "tamamlandi" && b.status !== "tamamlandi") return 1;
-    if (b.status === "tamamlandi" && a.status !== "tamamlandi") return -1;
-    if (a.status === "iptal" && b.status !== "iptal") return 1;
-    if (b.status === "iptal" && a.status !== "iptal") return -1;
-    return a.time.localeCompare(b.time);
-  });
+  const sorted = [...todayAppointments].sort((a, b) => a.time.localeCompare(b.time));
 
   return (
     <div className="flex flex-col gap-4">
@@ -78,8 +68,6 @@ export default function Dashboard() {
         ) : (
           <div className="flex flex-col gap-1.5">
             {sorted.map((appointment, idx) => {
-              const isCompleted = appointment.status === "tamamlandi";
-              const isCancelled = appointment.status === "iptal";
               const nextAppointment = sorted[idx + 1];
               const isLastOfHour =
                 nextAppointment &&
@@ -100,16 +88,7 @@ export default function Dashboard() {
                 >
                   {showTimeHeader && (
                     <div className="flex items-center gap-2 py-1.5">
-                      <div
-                        className={cn(
-                          "flex size-6 items-center justify-center rounded-full text-[10px] font-bold",
-                          isCompleted
-                            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300"
-                            : isCancelled
-                              ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
-                              : "bg-primary/10 text-primary"
-                        )}
-                      >
+                      <div className="flex size-6 items-center justify-center rounded-full bg-primary/10 text-[10px] font-bold text-primary">
                         {appointment.time.substring(0, 2)}
                       </div>
                       <div className="h-px flex-1 bg-border" />
