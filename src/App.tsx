@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 import Dashboard from "@/pages/Dashboard";
 import AllAppointments from "@/pages/AllAppointments";
 import NewAppointment from "@/pages/NewAppointment";
+import NewCustomer from "@/pages/NewCustomer";
 
 const pageVariants = {
   initial: { opacity: 0, y: 12 },
@@ -56,6 +57,14 @@ function AppRoutes() {
           element={
             <PageWrapper>
               <NewAppointment />
+            </PageWrapper>
+          }
+        />
+        <Route
+          path="/yeni-musteri"
+          element={
+            <PageWrapper>
+              <NewCustomer />
             </PageWrapper>
           }
         />

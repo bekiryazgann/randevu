@@ -1,10 +1,11 @@
 import { createContext, useContext, useReducer, type Dispatch, type ReactNode } from "react";
-import type { Appointment, AppointmentStatus, ServiceRecord, Vehicle } from "@/types";
-import { appointments as initialAppointments, serviceRecords as initialServiceRecords, customers } from "@/data/mock";
+import type { Appointment, AppointmentStatus, Customer, ServiceRecord, Vehicle } from "@/types";
+import { appointments as initialAppointments, serviceRecords as initialServiceRecords, customers as initialCustomers } from "@/data/mock";
 
 interface AppState {
   appointments: Appointment[];
   serviceRecords: ServiceRecord[];
+  customers: Customer[];
   selectedCustomerId: string | null;
   selectedAppointmentId: string | null;
 }
@@ -12,6 +13,7 @@ interface AppState {
 type AppAction =
   | { type: "SELECT_CUSTOMER"; customerId: string | null }
   | { type: "SELECT_APPOINTMENT"; appointmentId: string | null }
+  | { type: "ADD_CUSTOMER"; customer: Customer }
   | { type: "ADD_APPOINTMENT"; appointment: Appointment }
   | { type: "UPDATE_APPOINTMENT"; appointment: Appointment }
   | { type: "UPDATE_APPOINTMENT_STATUS"; id: string; status: AppointmentStatus }
@@ -25,6 +27,7 @@ function getTodayAppointments(appts: Appointment[]) {
 const initialState: AppState = {
   appointments: initialAppointments,
   serviceRecords: initialServiceRecords,
+  customers: initialCustomers,
   selectedCustomerId: null,
   selectedAppointmentId: null,
 };
@@ -36,6 +39,9 @@ function appReducer(state: AppState, action: AppAction): AppState {
 
     case "SELECT_APPOINTMENT":
       return { ...state, selectedAppointmentId: action.appointmentId };
+
+    case "ADD_CUSTOMER":
+      return { ...state, customers: [...state.customers, action.customer] };
 
     case "ADD_APPOINTMENT":
       return { ...state, appointments: [...state.appointments, action.appointment] };
@@ -71,7 +77,7 @@ interface AppContextValue {
   state: AppState;
   dispatch: Dispatch<AppAction>;
   todayAppointments: Appointment[];
-  getCustomerById: (id: string) => typeof customers[0] | undefined;
+  getCustomerById: (id: string) => Customer | undefined;
   getCustomerAppointments: (customerId: string) => Appointment[];
   getCustomerServiceRecords: (customerId: string) => ServiceRecord[];
   getVehicleById: (id: string) => Vehicle | undefined;
@@ -85,7 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   const todayAppointments = getTodayAppointments(state.appointments);
 
-  const getCustomerById = (id: string) => customers.find((c) => c.id === id);
+  const getCustomerById = (id: string) => state.customers.find((c) => c.id === id);
 
   const getCustomerAppointments = (customerId: string) =>
     state.appointments.filter((a) => a.customerId === customerId);
@@ -94,7 +100,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     state.serviceRecords.filter((r) => r.customerId === customerId);
 
   const getVehicleById = (id: string) => {
-    for (const c of customers) {
+    for (const c of state.customers) {
       const v = c.vehicles.find((v) => v.id === id);
       if (v) return v;
     }
@@ -136,5 +142,3 @@ export function useApp() {
   if (!ctx) throw new Error("useApp must be used within AppProvider");
   return ctx;
 }
-
-export { customers };

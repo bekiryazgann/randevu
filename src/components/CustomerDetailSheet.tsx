@@ -4,13 +4,13 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/StatusBadge";
-import { customers, serviceRecords } from "@/data/mock";
+import { serviceRecords } from "@/data/mock";
 import { Phone, Car, Calendar, Wrench, Gauge, X } from "lucide-react";
 
 export function CustomerDetailSheet() {
   const { state, dispatch } = useApp();
   const customerId = state.selectedCustomerId;
-  const customer = customerId ? customers.find((c) => c.id === customerId) : undefined;
+  const customer = customerId ? state.customers.find((c) => c.id === customerId) : undefined;
 
   if (!customer) return null;
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
-import { useApp, customers } from "@/store/AppContext";
+import { useApp } from "@/store/AppContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -18,22 +18,17 @@ import { Check, UserPlus } from "lucide-react";
 import { toast } from "sonner";
 
 export default function NewAppointment() {
-  const { dispatch } = useApp();
+  const { dispatch, state } = useApp();
   const navigate = useNavigate();
-  const [step, setStep] = useState<"form" | "customer">("customer");
-  const [customerId, setCustomerId] = useState("");
+  const preselectedId = state.selectedCustomerId;
+  const [step, setStep] = useState<"form" | "customer">(preselectedId ? "form" : "customer");
+  const [customerId, setCustomerId] = useState(preselectedId || "");
   const [vehicleId, setVehicleId] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [time, setTime] = useState("");
   const [notes, setNotes] = useState("");
 
-  const [newCustomerName, setNewCustomerName] = useState("");
-  const [newCustomerPhone, setNewCustomerPhone] = useState("");
-  const [newVehiclePlate, setNewVehiclePlate] = useState("");
-  const [newVehicleModel, setNewVehicleModel] = useState("");
-  const [newVehicleYear, setNewVehicleYear] = useState("");
-
-  const selectedCustomer = customers.find((c) => c.id === customerId);
+  const selectedCustomer = state.customers.find((c) => c.id === customerId);
 
   const handleSubmit = () => {
     if (!customerId || !vehicleId || !time) {
@@ -65,6 +60,7 @@ export default function NewAppointment() {
     setTime("");
     setNotes("");
     setStep("customer");
+    dispatch({ type: "SELECT_CUSTOMER", customerId: null });
     navigate("/");
   };
 
@@ -85,10 +81,7 @@ export default function NewAppointment() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.2 }}
-              onClick={() => {
-                setCustomerId("new");
-                setStep("form");
-              }}
+              onClick={() => navigate("/yeni-musteri")}
               className="flex items-center gap-3 rounded-lg border-2 border-dashed border-primary/30 p-3 text-left transition-colors hover:bg-primary/5"
             >
               <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
@@ -109,7 +102,7 @@ export default function NewAppointment() {
               </div>
             </div>
 
-            {customers.map((c, i) => (
+            {state.customers.map((c, i) => (
               <motion.button
                 key={c.id}
                 initial={{ opacity: 0, y: 8 }}
@@ -148,6 +141,7 @@ export default function NewAppointment() {
             onClick={() => {
               setStep("customer");
               setCustomerId("");
+              dispatch({ type: "SELECT_CUSTOMER", customerId: null });
             }}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
@@ -163,60 +157,6 @@ export default function NewAppointment() {
 
       <Card>
         <CardContent className="flex flex-col gap-4 p-4">
-          {customerId === "new" && (
-            <>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Müşteri Adı *</Label>
-                <Input
-                  value={newCustomerName}
-                  onChange={(e) => setNewCustomerName(e.target.value)}
-                  placeholder="Ad Soyad"
-                  className="h-11"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label className="text-xs">Telefon *</Label>
-                <Input
-                  value={newCustomerPhone}
-                  onChange={(e) => setNewCustomerPhone(e.target.value)}
-                  placeholder="05XX XXX XX XX"
-                  className="h-11"
-                  inputMode="tel"
-                />
-              </div>
-              <div className="grid grid-cols-3 gap-2">
-                <div className="space-y-1.5 col-span-1">
-                  <Label className="text-xs">Plaka *</Label>
-                  <Input
-                    value={newVehiclePlate}
-                    onChange={(e) => setNewVehiclePlate(e.target.value)}
-                    placeholder="34 AB 1234"
-                    className="h-11 uppercase"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs">Model</Label>
-                  <Input
-                    value={newVehicleModel}
-                    onChange={(e) => setNewVehicleModel(e.target.value)}
-                    placeholder="Civic"
-                    className="h-11"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <Label className="text-xs">Yıl</Label>
-                  <Input
-                    value={newVehicleYear}
-                    onChange={(e) => setNewVehicleYear(e.target.value)}
-                    placeholder="2024"
-                    className="h-11"
-                    inputMode="numeric"
-                  />
-                </div>
-              </div>
-            </>
-          )}
-
           {selectedCustomer && (
             <div className="space-y-1.5">
               <Label className="text-xs">Araç *</Label>
