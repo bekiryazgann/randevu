@@ -161,8 +161,8 @@ export function EditAppointmentSheet() {
 
             <Separator />
 
-            <div className="space-y-1.5">
-              <Label className="text-xs" htmlFor="edit-date">
+            <div className="space-y-2">
+              <Label className="text-sm" htmlFor="edit-date">
                 <Calendar className="size-3 inline mr-1" />
                 Tarih
               </Label>
@@ -171,22 +171,22 @@ export function EditAppointmentSheet() {
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="h-11 w-full"
+                className="h-12 w-full text-base"
               />
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs">
+            <div className="space-y-2">
+              <Label className="text-sm">
                 <Clock className="size-3 inline mr-1" />
                 Saat
               </Label>
               <Select value={time} onValueChange={setTime}>
-                <SelectTrigger className="h-11 w-full">
+                <SelectTrigger className="h-12 w-full text-base">
                   <SelectValue placeholder="Saat seçin" />
                 </SelectTrigger>
                 <SelectContent>
                   {timeSlots.map((t) => (
-                    <SelectItem key={t} value={t}>
+                    <SelectItem key={t} value={t} className="text-base py-3">
                       {t}
                     </SelectItem>
                   ))}
@@ -194,8 +194,8 @@ export function EditAppointmentSheet() {
               </Select>
             </div>
 
-            <div className="space-y-1.5">
-              <Label className="text-xs" htmlFor="edit-notes">
+            <div className="space-y-2">
+              <Label className="text-sm" htmlFor="edit-notes">
                 <FileText className="size-3 inline mr-1" />
                 İşlem / Not
               </Label>
@@ -204,7 +204,7 @@ export function EditAppointmentSheet() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="İşlem açıklaması..."
-                className="h-11"
+                className="h-12 text-base"
               />
             </div>
 

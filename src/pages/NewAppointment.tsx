@@ -156,17 +156,17 @@ export default function NewAppointment() {
       </div>
 
       <Card>
-        <CardContent className="flex flex-col gap-4 p-4">
+        <CardContent className="flex flex-col gap-5 p-4">
           {selectedCustomer && (
-            <div className="space-y-1.5">
-              <Label className="text-xs">Araç *</Label>
+            <div className="space-y-2">
+              <Label className="text-sm">Araç *</Label>
               <Select value={vehicleId} onValueChange={setVehicleId}>
-                <SelectTrigger className="h-11 w-full">
+                <SelectTrigger className="h-12 w-full text-base">
                   <SelectValue placeholder="Araç seçin" />
                 </SelectTrigger>
                 <SelectContent>
                   {selectedCustomer.vehicles.map((v) => (
-                    <SelectItem key={v.id} value={v.id}>
+                    <SelectItem key={v.id} value={v.id} className="text-base py-3">
                       {v.plate} - {v.model} {v.year}
                     </SelectItem>
                   ))}
@@ -175,25 +175,25 @@ export default function NewAppointment() {
             </div>
           )}
 
-          <div className="space-y-1.5">
-            <Label className="text-xs">Tarih *</Label>
+          <div className="space-y-2">
+            <Label className="text-sm">Tarih *</Label>
             <Input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="h-11 w-full"
+              className="h-12 w-full text-base"
             />
           </div>
 
-          <div className="space-y-1.5">
-            <Label className="text-xs">Saat *</Label>
+          <div className="space-y-2">
+            <Label className="text-sm">Saat *</Label>
             <Select value={time} onValueChange={setTime}>
-              <SelectTrigger className="h-11 w-full">
+              <SelectTrigger className="h-12 w-full text-base">
                 <SelectValue placeholder="Saat seçin" />
               </SelectTrigger>
               <SelectContent>
                 {timeSlots.map((t) => (
-                  <SelectItem key={t} value={t}>
+                  <SelectItem key={t} value={t} className="text-base py-3">
                     {t}
                   </SelectItem>
                 ))}
@@ -201,13 +201,13 @@ export default function NewAppointment() {
             </Select>
           </div>
 
-          <div className="space-y-1.5">
-            <Label className="text-xs">İşlem / Not</Label>
+          <div className="space-y-2">
+            <Label className="text-sm">İşlem / Not</Label>
             <Input
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Yağ değişimi, periyodik bakım..."
-              className="h-11"
+              className="h-12 text-base"
             />
           </div>
 
